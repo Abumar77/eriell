@@ -1,71 +1,54 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:hive/hive.dart';
+
 import '../../../../utils/constants.dart';
 import '../../../../utils/shared_preferences.services.dart';
 import '../../data/model/models.dart';
 
 abstract class LoginRepo {
-  Future<LoginResponse> login(String username, String password);
+  Future<bool> login(String username, String password);
+  Future<bool> register(String username, String password);
 }
 
 class LoginRepoImpl extends LoginRepo {
   @override
-  Future<LoginResponse> login(String username, String password) async {
-    // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    // String? deviceName;
-    // String? deviceKey;
-    // String? platformId = 'mobile';
-    // if (Platform.isAndroid) {
-    //   AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-    //   deviceName = androidDeviceInfo.model;
-    //   deviceKey = androidDeviceInfo.device;
-    // } else if (Platform.isIOS) {
-    //   IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
-    //   deviceName = iosDeviceInfo.model;
-    //   deviceKey = iosDeviceInfo.systemName;
-    // } else {
-    //   platformId = 'web';
-    // }
-    var credentials = <String, String>{};
-    credentials['username'] = username;
-    credentials['password'] = password;
-    // credentials['device_name'] = deviceName!;
-    // credentials['device_key'] = deviceKey!;
-    // credentials['platform_id'] = platformId;
+  Future<bool> login(String username, String password) async {
     try {
-      /// some response
-      // final response = await HttpClientProvider.getInstance.client
-      //     .post(
-      //       "users/create/token",
-      //       data: credentials,
-      //     )
-      //     .timeout(const Duration(seconds: 7));
-
-      final response =
-          LoginResponse(success: true, error: null, result: "TOKEN");
-      // if (response.statusCode == 200) {
-
-      // var auth = LoginResponse.fromJson(response);
-      if (response.success == true) {
-        final prefs = PreferencesService();
-        await setData(prefs, response);
-
-        return response;
+      var box2 = Hive.box<UserHive>(UserBoxName);
+      bool dbContainsUser = box2.containsKey(username);
+      if (dbContainsUser) {
+        UserHive? user = box2.get(username);
+        if (user?.password == password) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        throw Exception(response.error);
+        return false;
       }
     } catch (e) {
-      throw Exception(e);
+      return false;
     }
   }
 
-  Future<void> setData(PreferencesService pref, LoginResponse auth) async {
-    // var list = auth.token!.values.toList();
-    pref.putString(
-      KEY_TOKEN,
-      auth.result,
-    );
+  @override
+  Future<bool> register(String username, String password) async {
+    UserHive credentials = UserHive(password: password, login: username);
+
+    try {
+      var box2 = Hive.box<UserHive>(UserBoxName);
+      await box2.put(username, credentials);
+      bool registered = await box2.containsKey(username);
+      if (registered) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 
 //Method to save info in pref

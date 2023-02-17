@@ -21,13 +21,13 @@ class LoginState {
   LoginState copyWith({
     String? username,
     String? password,
-    Statuses? formStatus,
+    Statuses? status,
     String? errorMessage,
   }) {
     return LoginState(
       username: username ?? this.username,
       password: password ?? this.password,
-      status: formStatus ?? status,
+      status: status ?? this.status,
       errorMessage: errorMessage,
     );
   }

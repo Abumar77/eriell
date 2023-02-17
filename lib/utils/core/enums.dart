@@ -1,1 +1,10 @@
-enum Statuses { initial, loading, success, fcmSent, error, unauthorized }
+enum Statuses {
+  initial,
+  loading,
+  success,
+  fcmSent,
+  error,
+  unauthorized,
+  registered,
+  authenticated
+}

@@ -1,9 +1,6 @@
-import 'package:eriell/screens/authorization/presentation/bloc/login_bloc.dart';
-import 'package:eriell/screens/mainscreen/data/models/models.dart';
-import 'package:eriell/utils/constants.dart';
+import 'package:eriell/routes/app_router.gr.dart';
+
 import 'package:eriell/utils/links.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 
 Map<String, double> mapp = {
   'Natural gas': 60405.8,
@@ -15,9 +12,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
   Hive.registerAdapter(ObjectsHiveAdapter());
+  Hive.registerAdapter(UserHiveAdapter());
   // Wakelock.enable();
 
   var box = await Hive.openBox<ObjectsHive>(DataBoxName);
+  await Hive.openBox<UserHive>(UserBoxName);
 
   box.put(Values, ObjectsHive(data: mapp));
   await setup();

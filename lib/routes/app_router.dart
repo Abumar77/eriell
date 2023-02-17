@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eriell/screens/authorization/presentation/view/authentication_screen.dart';
 import 'package:eriell/screens/mainscreen/presentation/view/main_screen.dart';
-
+import '../screens/authorization/presentation/view/register_screen.dart';
 import '../screens/splashscreen/presentation/view/splash_screen.dart';
 
 @MaterialAutoRouter(replaceInRouteName: 'Page,Route', routes: [
@@ -20,6 +20,11 @@ import '../screens/splashscreen/presentation/view/splash_screen.dart';
     page: MainScreen,
     fullscreenDialog: true,
     path: MainScreen.routeName,
+  ),
+  MaterialRoute(
+    page: RegistrationScreen,
+    fullscreenDialog: true,
+    path: RegistrationScreen.routeName,
   ),
 ])
 class $AppRouter {}
