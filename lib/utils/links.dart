@@ -10,5 +10,6 @@ export '../../../../utils/components/logo.dart';
 
 export 'package:eriell/screens/authorization/presentation/bloc/login_event.dart';
 export 'package:eriell/screens/authorization/presentation/bloc/login_repo.dart';
+export 'package:eriell/screens/mainscreen/presentation/view/widgets/widgets.dart';
 
 export 'package:eriell/screens/authorization/presentation/bloc/login_state.dart';
